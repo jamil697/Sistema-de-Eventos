@@ -1,0 +1,87 @@
+/* Variables de colores */
+:root {
+    --primary: #0057B8;
+    --secondary: #4DA3FF;
+    --accent: #F0A500;
+    --background: #F4F7FB;
+    --dark: #0A2A43;
+    --text: #202020;
+}
+
+/* Fondo general y textos*/
+body {
+    background-color: var(--background);
+    color: var(--text);
+}
+
+/* Navbar*/
+.navbar {
+    background-color: var(--primary) !important;
+}
+
+.navbar-brand,
+.navbar .nav-link,
+.navbar .dropdown-toggle {
+    color: white !important;
+}
+
+.navbar .nav-link:hover,
+.navbar .dropdown-item:hover {
+    color: var(--accent) !important;
+}
+
+/* Botones*/
+.btn-primary {
+    background-color: var(--primary);
+    border-color: var(--primary);
+}
+.btn-primary:hover {
+    background-color: var(--dark);
+    border-color: var(--dark);
+}
+
+.btn-secondary {
+    background-color: var(--secondary);
+    border-color: var(--secondary);
+}
+.btn-secondary:hover {
+    background-color: #2C8ADA;
+    border-color: #2C8ADA;
+}
+
+.btn-accent {
+    background-color: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+}
+.btn-accent:hover {
+    background-color: #c48800;
+    border-color: #c48800;
+}
+
+/* Cards */
+.card {
+    border-radius: 10px;
+    border: 1px solid var(--secondary);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.07);
+}
+
+.card-header {
+    background-color: var(--primary);
+    color: white;
+    font-weight: bold;
+}
+
+/* Links*/
+a {
+    color: var(--primary);
+}
+
+a:hover {
+    color: var(--dark);
+}
+
+/* Titulos */
+h1, h2, h3, h4, h5 {
+    color: var(--dark);
+}

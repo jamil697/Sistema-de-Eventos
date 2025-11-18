@@ -19,6 +19,7 @@
     <!-- Scripts -->
    <!-- Scripts -->
 <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+<link rel="stylesheet" href="{{ asset('css/branding.css') }}">
 <script src="{{ asset('js/app.js') }}" defer></script>
 </head>
 <body>
