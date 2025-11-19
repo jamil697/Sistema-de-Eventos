@@ -22,6 +22,7 @@
     <!-- Estilos del proyecto -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/branding.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/custome.css') }}">
 </head>
 
 <body class="bg-light">
