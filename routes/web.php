@@ -1,67 +1,60 @@
-<?php
-
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', function () { return view('welcome'); });
 
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-// Página principal → listado de eventos para ciudadanos
-Route::get('/', function () {
-    return view('eventos.editar');
-})->name('eventos.editar');
 
-// editar de un evento
+/* Admin - eventos */
+Route::get('/admin/eventos/editar', function () {
+    return view('admin.eventos.editar');
+})->name('admin.eventos.editar');
+
 Route::get('/admin/eventos/lista', function () {
-    return view('eventos.lista');
-})->name('eventos.lista');
+    return view('admin.eventos.lista');
+})->name('admin.eventos.lista');
 
-// Registro a un evento
 Route::get('/admin/eventos/mostrar', function () {
-    return view('eventos.mostrar');
-})->name('eventos.mostrar');
+    return view('admin.eventos.mostrar');
+})->name('admin.eventos.mostrar');
 
-// lista de eventos
-Route::get('/inscripciones/eventos/registrar', function () {
+Route::get('/admin/eventos/registrar', function () {
     return view('admin.eventos.registrar');
 })->name('admin.eventos.registrar');
 
-// Crear evento
+/* Admin - inscripciones */
 Route::get('/admin/inscripciones/lista', function () {
     return view('admin.inscripciones.lista');
 })->name('admin.inscripciones.lista');
 
-// Editar evento
+/* Admin - recursos */
 Route::get('/admin/recursos/asignar', function () {
     return view('admin.recursos.asignar');
 })->name('admin.recursos.asignar');
 
-// Asignar recursos
 Route::get('/admin/eventos/recursos', function () {
     return view('admin.recursos.asignar');
 })->name('admin.eventos.recursos');
 
-// Lista de inscripciones
-Route::get('/ciudadano/inscripciones', function () {
+/* Ciudadano - inscripciones (rutas únicas, NO repetir la misma URI) */
+Route::get('/ciudadano/inscripciones/buscar', function () {
     return view('ciudadano.inscripciones.buscar');
 })->name('ciudadano.inscripciones.buscar');
 
-// Reportes
-Route::get('/ciudadano/inscripciones', function () {
+Route::get('/ciudadano/inscripciones/detalle', function () {
     return view('ciudadano.inscripciones.detalle');
 })->name('ciudadano.inscripciones.detalle');
 
-Route::get('/ciudadano/inscripciones', function () {
+Route::get('/ciudadano/inscripciones/inscripcion', function () {
     return view('ciudadano.inscripciones.inscripcion');
 })->name('ciudadano.inscripciones.inscripcion');
 
-Route::get('/ciudadano/inscripciones', function () {
+Route::get('/ciudadano/inscripciones/lista', function () {
     return view('ciudadano.inscripciones.lista_inscripcion');
 })->name('ciudadano.inscripciones.lista_inscripcion');
 
-Route::get('/ciudadano/inscripciones', function () {
+Route::get('/ciudadano/inscripciones/mostrar', function () {
     return view('ciudadano.inscripciones.mostrar');
 })->name('ciudadano.inscripciones.mostrar');
