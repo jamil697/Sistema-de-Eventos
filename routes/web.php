@@ -9,19 +9,19 @@ Auth::routes();
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 /* Admin - eventos */
-Route::get('/admin/eventos/editar', function () {
+Route::get('/eventos', function () {
     return view('admin.eventos.editar');
 })->name('admin.eventos.editar');
 
-Route::get('/admin/eventos/lista', function () {
+Route::get('/lista', function () {
     return view('admin.eventos.lista');
 })->name('admin.eventos.lista');
 
-Route::get('/admin/eventos/mostrar', function () {
+Route::get('/mostrar', function () {
     return view('admin.eventos.mostrar');
 })->name('admin.eventos.mostrar');
 
-Route::get('/admin/eventos/registrar', function () {
+Route::get('/registrar', function () {
     return view('admin.eventos.registrar');
 })->name('admin.eventos.registrar');
 
@@ -59,3 +59,7 @@ Route::get('/ciudadano/inscripciones/lista', function () {
 Route::get('/ciudadano/inscripciones/mostrar', function () {
     return view('ciudadano.inscripciones.mostrar');
 })->name('ciudadano.inscripciones.mostrar');
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
