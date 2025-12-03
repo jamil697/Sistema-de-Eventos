@@ -1,68 +1,68 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 
-
+/* Página pública */
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/', function () { return view('welcome'); });
-
+/* Rutas de autenticación (deben quedar fuera del middleware) */
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+/* TODO LO SIGUIENTE REQUIERE LOGIN */
+Route::middleware(['auth'])->group(function () {
 
-/* Admin - eventos */
-Route::get('/eventos', function () {
-    return view('admin.eventos.editar');
-})->name('admin.eventos.editar');
+    Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])
+        ->name('home');
 
-Route::get('/lista', function () {
-    return view('admin.eventos.lista');
-})->name('admin.eventos.lista');
+    /* Admin - eventos */
+    Route::get('/eventos', function () {
+        return view('admin.eventos.editar');
+    })->name('admin.eventos.editar');
 
-Route::get('/mostrar', function () {
-    return view('admin.eventos.mostrar');
-})->name('admin.eventos.mostrar');
+    Route::get('/lista', function () {
+        return view('admin.eventos.lista');
+    })->name('admin.eventos.lista');
 
-Route::get('/registrar', function () {
-    return view('admin.eventos.registrar');
-})->name('admin.eventos.registrar');
+    Route::get('/mostrar', function () {
+        return view('admin.eventos.mostrar');
+    })->name('admin.eventos.mostrar');
 
-/* Admin - inscripciones */
-Route::get('/admin/inscripciones/lista', function () {
-    return view('admin.inscripciones.lista');
-})->name('admin.inscripciones.lista');
+    Route::get('/registrar', function () {
+        return view('admin.eventos.registrar');
+    })->name('admin.eventos.registrar');
 
-/* Admin - recursos */
-Route::get('/admin/recursos/asignar', function () {
-    return view('admin.recursos.asignar');
-})->name('admin.recursos.asignar');
+    /* Admin - inscripciones */
+    Route::get('/admin/inscripciones/lista', function () {
+        return view('admin.inscripciones.lista');
+    })->name('admin.inscripciones.lista');
 
+    /* Admin - recursos */
+    Route::get('/admin/recursos/asignar', function () {
+        return view('admin.recursos.asignar');
+    })->name('admin.recursos.asignar');
 
-/* Ciudadano - inscripciones (rutas únicas, NO repetir la misma URI) */
-Route::get('/ciudadano/buscar', function () {
-    return view('ciudadano.inscripcion');
-})->name('ciudadano.buscar');
+    /* Ciudadano - inscripciones */
+    Route::get('/ciudadano/buscar', function () {
+        return view('ciudadano.inscripcion');
+    })->name('ciudadano.buscar');
 
-Route::get('/ciudadano/detalle', function () {
-    return view('ciudadano.detalle');
-})->name('ciudadano.detalle');
+    Route::get('/ciudadano/detalle', function () {
+        return view('ciudadano.detalle');
+    })->name('ciudadano.detalle');
 
-Route::get('/ciudadano/inscripcion', function () {
-    return view('ciudadano.inscripcion');
-})->name('ciudadano.inscripcion');
+    Route::get('/ciudadano/inscripcion', function () {
+        return view('ciudadano.inscripcion');
+    })->name('ciudadano.inscripcion');
 
-Route::get('/ciudadano/lista', function () {
-    return view('ciudadano.lista_inscripcion');
-})->name('ciudadano.lista_inscripcion');
+    Route::get('/ciudadano/lista', function () {
+        return view('ciudadano.lista_inscripcion');
+    })->name('ciudadano.lista_inscripcion');
 
-Route::get('/ciudadano/mostrar', function () {
-    return view('ciudadano.mostrar');
-})->name('ciudadano.mostrar');
+    Route::get('/ciudadano/mostrar', function () {
+        return view('ciudadano.mostrar');
+    })->name('ciudadano.mostrar');
 
-
-Auth::routes();
-
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+});
