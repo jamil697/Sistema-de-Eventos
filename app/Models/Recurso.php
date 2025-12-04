@@ -7,20 +7,15 @@ use Illuminate\Database\Eloquent\Model;
 class Recurso extends Model
 {
 
-    protected $table = 'recursos';
-
-    protected $fillable = [
-        'nombre',
-        'tipo',
-        'cantidad',
-        'disponibilidad'
-    ];
-
-    public function eventos()
+    protected $fillable = ['nombre','descripcion','cantidad'];
+    public function events()
     {
-        return $this->belongsToMany(Evento::class, 'evento_recurso')
-                    ->withPivot('cantidad')
-                    ->withTimestamps();
+        return $this->belongsToMany(
+            Evento::class,
+            'evento_recurso',
+            'recurso_id',  // columna en pivot que referencia a resources
+            'event_id'      // columna en pivot que referencia a eventos
+        )->withPivot('cantidad')->withTimestamps();
     }
 
 }
