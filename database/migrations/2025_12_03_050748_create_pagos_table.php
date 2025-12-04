@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('pagos', function (Blueprint $table) {
             $table->id();
              $table->foreignId('inscripcion_id')
-                  ->constrained('inscripcions') 
+                  ->constrained('inscripciones') 
                   ->onDelete('cascade');
 
             $table->decimal('monto', 8, 2)->nullable();
