@@ -30,7 +30,9 @@ class Evento extends Model
 
     public function recursos()
     {
-        return $this->hasMany(Recurso::class);
+        return $this->belongsToMany(Recurso::class, 'evento_recurso')
+                    ->withPivot('cantidad')
+                    ->withTimestamps();
     }
 
     public function inscripciones()
