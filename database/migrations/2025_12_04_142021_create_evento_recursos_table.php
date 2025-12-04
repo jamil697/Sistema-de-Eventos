@@ -13,16 +13,9 @@ return new class extends Migration
     {
         Schema::create('evento_recursos', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('evento_id')
-              ->constrained('eventos')
-              ->onDelete('cascade');
-
-        $table->foreignId('recurso_id')
-              ->constrained('recursos')
-              ->onDelete('cascade');
-
-        $table->integer('cantidad')->default(1);
-
+            $table->foreignId('event_id')->constrained('eventos')->onDelete('cascade');
+            $table->foreignId('recursos_id')->constrained()->onDelete('cascade');
+            $table->integer('cantidad')->default(1);
             $table->timestamps();
         });
     }

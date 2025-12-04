@@ -13,8 +13,12 @@ return new class extends Migration
     {
         Schema::create('registracions', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('event_id')->constrained('eventos')->onDelete('cascade');
+            $table->string('estado')->default('inscrito');
             $table->timestamps();
-        });
+            $table->unique(['user_id', 'event_id']);
+    });
     }
 
     /**
