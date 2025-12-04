@@ -17,4 +17,5 @@ class AdminEmailMiddleware
     {
         return $next($request);
     }
+    
 }
