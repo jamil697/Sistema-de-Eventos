@@ -13,20 +13,15 @@ return new class extends Migration
     {
         Schema::create('eventos', function (Blueprint $table) {
             $table->id();
-              $table->string('titulo');
-            $table->string('tipo'); 
-            $table->date('fechaInicio');
-            $table->date('fechaFin');
-            $table->string('ubicacion');
-            $table->integer('capacidad');
-            $table->boolean('esDePago')->default(false);
-            $table->string('estado')->default('activo'); 
-            $table->decimal('costo', 8, 2)->nullable(); 
-
-            $table->foreignId('administrador_id')->constrained('users')->onDelete('cascade');
-
+            $table->string('titulo');
+            $table->text('descripcion')->nullable();
+            $table->string('lugar')->nullable();
+            $table->dateTime('fecha_inicio');
+            $table->dateTime('fecha_fin')->nullable();
+            $table->integer('cupo')->nullable(); // número máximo participantes
+            $table->unsignedBigInteger('created_by')->nullable(); // admin id
             $table->timestamps();
-        });
+            });
     }
 
     /**
