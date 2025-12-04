@@ -59,7 +59,7 @@
               <label for="selectResource" class="form-label">Seleccionar recurso</label>
               <select id="selectResource" class="form-control">
                 <option value="">-- Selecciona un recurso --</option>
-                @foreach(\App\Models\Resource::orderBy('nombre')->get() as $r)
+                @foreach(\App\Models\Recurso::orderBy('nombre')->get() as $r)
                   <option value="{{ $r->id }}">{{ $r->nombre }} (disp: {{ $r->cantidad }})</option>
                 @endforeach
               </select>
