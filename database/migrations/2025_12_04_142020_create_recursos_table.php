@@ -13,14 +13,6 @@ return new class extends Migration
     {
         Schema::create('recursos', function (Blueprint $table) {
             $table->id();
-            $table->string('nombre');
-            $table->string('tipo');           
-            $table->integer('cantidad')->default(1);
-            $table->boolean('disponibilidad')->default(true);
-
-            $table->foreignId('evento_id')
-                  ->constrained('eventos')
-                  ->onDelete('cascade');
             $table->timestamps();
         });
     }

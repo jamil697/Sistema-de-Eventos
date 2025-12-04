@@ -17,8 +17,11 @@ class Recurso extends Model
         'evento_id'
     ];
 
-    public function evento()
+    public function eventos()
     {
-        return $this->belongsTo(Evento::class);
+        return $this->belongsToMany(Evento::class, 'evento_recurso')
+                ->withPivot('cantidad')
+                ->withTimestamps();
     }
+
 }

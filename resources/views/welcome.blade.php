@@ -2,6 +2,7 @@
 
 @section('content')
 <div class="container">
+<<<<<<< HEAD
     <h2 class="mb-4">Eventos Disponibles para Inscripción</h2>
 
     @if(session('success'))
@@ -11,6 +12,13 @@
     @if($eventos->isEmpty())
         <div class="alert alert-info">
             No hay eventos publicados por el momento.
+=======
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                WLCOME MI PROYECTO DE LARAVEL
+            </div>
+>>>>>>> origin/main
         </div>
     @else
         <table class="table table-striped">
