@@ -66,3 +66,15 @@ Route::middleware(['auth'])->group(function () {
     })->name('ciudadano.mostrar');
 
 });
+
+Route::prefix('admin')->group(function () {
+
+        // CRUD de eventos
+        Route::resource('eventos', App\Http\Controllers\EventoController::class);
+
+        // Quitar recurso de un evento
+        Route::delete('eventos/{evento}/quitar-recurso/{recurso}',
+            [App\Http\Controllers\EventoController::class, 'quitarRecurso']
+        )->name('admin.eventos.quitarRecurso');
+
+     });    
