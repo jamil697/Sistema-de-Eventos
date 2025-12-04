@@ -13,15 +13,14 @@ class Recurso extends Model
         'nombre',
         'tipo',
         'cantidad',
-        'disponibilidad',
-        'evento_id'
+        'disponibilidad'
     ];
 
     public function eventos()
     {
         return $this->belongsToMany(Evento::class, 'evento_recurso')
-                ->withPivot('cantidad')
-                ->withTimestamps();
+                    ->withPivot('cantidad')
+                    ->withTimestamps();
     }
 
 }

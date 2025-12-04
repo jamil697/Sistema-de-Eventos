@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\EventoController;
+
 
 /* Página pública */
 Route::get('/', function () {
@@ -17,22 +19,30 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])
         ->name('home');
 
-    /* Admin - eventos */
-    Route::get('/eventos', function () {
-        return view('admin.eventos.editar');
-    })->name('admin.eventos.editar');
+/* Admin - eventos */
+    
+    Route::middleware(['auth'])->group(function () {
 
-    Route::get('/lista', function () {
-        return view('admin.eventos.lista');
-    })->name('admin.eventos.lista');
+    Route::prefix('admin')->group(function () {
 
-    Route::get('/mostrar', function () {
-        return view('admin.eventos.mostrar');
-    })->name('admin.eventos.mostrar');
+        // CRUD de eventos (admin/eventos/...)
+        Route::resource('eventos', EventoController::class);
 
-    Route::get('/registrar', function () {
-        return view('admin.eventos.registrar');
-    })->name('admin.eventos.registrar');
+        // Asignar recurso a un evento
+        Route::post('eventos/{evento}/asignar-recurso',
+            [EventoController::class, 'asignarRecurso']
+        )->name('admin.eventos.asignarRecurso');
+
+        // Quitar recurso de un evento
+        Route::delete('eventos/{evento}/quitar-recurso/{recurso}',
+            [EventoController::class, 'quitarRecurso']
+        )->name('admin.eventos.quitarRecurso');
+
+        });
+
+    });
+
+
 
     /* Admin - inscripciones */
     Route::get('/admin/inscripciones/lista', function () {
