@@ -2,6 +2,7 @@
 
 namespace App\Notifications;
 
+use App\Models\Evento;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -10,13 +11,14 @@ use Illuminate\Notifications\Notification;
 class EventUpdatedNotification extends Notification
 {
     use Queueable;
+    protected $event;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct()
+    public function __construct(Evento $event)
     {
-        //
+        $this->event = $event;
     }
 
     /**
@@ -26,9 +28,18 @@ class EventUpdatedNotification extends Notification
      */
     public function via(object $notifiable): array
     {
-        return ['mail'];
+        return ['database'];
     }
 
+    public function toDatabase(object $notifiable): array
+    {
+        return [
+            'event_id'   => $this->event->id,
+            'titulo'     => $this->event->titulo,
+            'mensaje'    => 'El evento "'.$this->event->titulo.'" ha sido actualizado.',
+            'fecha'      => now()->toDateTimeString(),
+        ];
+    }
     /**
      * Get the mail representation of the notification.
      */

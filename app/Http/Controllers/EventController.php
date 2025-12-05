@@ -2,7 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Evento;
+use App\Models\Recurso;
+use App\Models\User;
+use App\Notifications\EventUpdatedNotification;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class EventController extends Controller
 {
@@ -18,14 +23,14 @@ class EventController extends Controller
             ->orderBy('fecha_inicio','asc')
             ->paginate(10);
 
-        return view('events.index', compact('events'));
+        return view('eventos.index', compact('events'));
     }
 
     public function create()
     {
         // Obtener recursos disponibles para asignar al crear evento
-        $resources = Resource::all();
-        return view('events.create', compact('resources'));
+        $resources = Recurso::all();
+        return view('eventos.create', compact('resources'));
     }
 
     public function store(Request $request)
@@ -66,7 +71,7 @@ class EventController extends Controller
             : false;
 
 
-            return view('events.show', compact('event','inscritosCount','estaInscrito'));
+            return view('eventos.show', compact('event','inscritosCount','estaInscrito'));
         }
 
     public function edit(Evento $event)
@@ -79,10 +84,10 @@ class EventController extends Controller
         abort(403, 'Acción no autorizada.');
     }
 
-        $resources = Resource::all();
+        $resources = Recurso::all();
         // preparar array con cantidades actuales
-        $assigned = $event->resources()->pluck('event_resource.cantidad','resource_id')->toArray();
-        return view('events.edit', compact('event','resources','assigned'));
+        $assigned = $event->resources->pluck('pivot.cantidad', 'id')->toArray();
+        return view('eventos.edit', compact('event','resources','assigned'));
     }
 
     public function update(Request $request, Evento $event)

@@ -53,7 +53,7 @@
               <label for="selectResource" class="form-label">Seleccionar recurso</label>
               <select id="selectResource" class="form-control">
                 <option value="">-- Selecciona un recurso --</option>
-                @foreach(\App\Models\Resource::orderBy('nombre')->get() as $r)
+                @foreach(\App\Models\Recurso::orderBy('nombre')->get() as $r)
                   <option value="{{ $r->id }}">{{ $r->nombre }} (disp: {{ $r->cantidad }})</option>
                 @endforeach
               </select>
@@ -76,7 +76,7 @@
             {{-- Si quieres precargar algo en create, puedes usar old() --}}
             @if(old('resources'))
               @foreach(old('resources') as $rid => $cant)
-                @php $res = \App\Models\Resource::find($rid); @endphp
+                @php $res = \App\Models\Recurso::find($rid); @endphp
                 @if($res)
                   <div class="assigned-resource row g-2 align-items-center mb-2" data-resource-id="{{ $res->id }}">
                     <div class="col-md-8"><strong>{{ $res->nombre }}</strong></div>
@@ -200,8 +200,9 @@ document.addEventListener('DOMContentLoaded', function(){
       const resource = data.resource;
       const option = document.createElement('option');
       option.value = resource.id;
-      option.text = ${resource.nombre} (disp: ${resource.cantidad});
+      option.text = `${resource.nombre} (disp: ${resource.cantidad})`;
       document.getElementById('selectResource').appendChild(option);
+
 
       document.getElementById('selectResource').value = resource.id;
       document.getElementById('selectCantidad').value = 1;
@@ -219,10 +220,11 @@ document.addEventListener('DOMContentLoaded', function(){
   });
 
   function showNewResErrors(arr){
-    const el = document.getElementById('newResourceErrors');
-    el.innerHTML = '<ul>'+arr.map(x=><li>${x}</li>).join('')+'</ul>';
-    el.classList.remove('d-none');
-  }
+  const el = document.getElementById('newResourceErrors');
+  el.innerHTML = '<ul>' + arr.map(x => `<li>${x}</li>`).join('') + '</ul>';
+  el.classList.remove('d-none');
+}
+
   function hideNewResErrors(){
     const el = document.getElementById('newResourceErrors');
     el.classList.add('d-none');

@@ -200,8 +200,9 @@ document.addEventListener('DOMContentLoaded', function(){
       const resource = data.resource;
       const option = document.createElement('option');
       option.value = resource.id;
-      option.text = ${resource.nombre} (disp: ${resource.cantidad});
+      option.text = `${resource.nombre} (disp: ${resource.cantidad})`;
       document.getElementById('selectResource').appendChild(option);
+
 
       document.getElementById('selectResource').value = resource.id;
       document.getElementById('selectCantidad').value = 1;
@@ -219,10 +220,11 @@ document.addEventListener('DOMContentLoaded', function(){
   });
 
   function showNewResErrors(arr){
-    const el = document.getElementById('newResourceErrors');
-    el.innerHTML = '<ul>'+arr.map(x=><li>${x}</li>).join('')+'</ul>';
-    el.classList.remove('d-none');
-  }
+  const el = document.getElementById('newResourceErrors');
+  el.innerHTML = '<ul>' + arr.map(x => `<li>${x}</li>`).join('') + '</ul>';
+  el.classList.remove('d-none');
+}
+
   function hideNewResErrors(){
     const el = document.getElementById('newResourceErrors');
     el.classList.add('d-none');

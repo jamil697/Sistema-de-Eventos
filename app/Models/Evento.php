@@ -29,9 +29,9 @@ public function users()
     // tabla pivot, foreignPivotKey en esta tabla (event_id), relatedPivotKey (resource_id)
     return $this->belongsToMany(
         Recurso::class,
-        'event_resource',
+        'evento_recursos',
         'event_id',     // columna en pivot que referencia a eventos
-        'resource_id'   // columna en pivot que referencia a resources
+        'recursos_id'   // columna en pivot que referencia a resources
     )->withPivot('cantidad')->withTimestamps();
 }
 

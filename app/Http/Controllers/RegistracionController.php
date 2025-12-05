@@ -1,6 +1,9 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Models\Evento;
+use App\Models\Registracion as Registration;
+use Illuminate\Support\Facades\Auth;
 
 use Illuminate\Http\Request;
 
@@ -55,7 +58,7 @@ class RegistracionController extends Controller
     {
         $user = Auth::user(); 
 
-        // 🚫 El admin no debe usar esta vista
+        
         if ($user->email === env('ADMIN_EMAIL')) {
             return redirect()->route('events.index')
                 ->with('info', 'Los administradores gestionan eventos, no se inscriben.');
@@ -69,6 +72,6 @@ class RegistracionController extends Controller
             ->orderBy('fecha_inicio', 'asc')
             ->get();
 
-        return view('events.mis_eventos', compact('eventos'));
+        return view('eventos.mis_eventos', compact('eventos'));
     }
 }
