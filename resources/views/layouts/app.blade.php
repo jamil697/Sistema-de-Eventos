@@ -48,7 +48,7 @@
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">
 
-                {{-- Marca a la izquierda (puedes cambiar el texto o quitarlo del todo si quieres) --}}
+                {{-- Marca a la izquierda (cámbiala o quítala si quieres) --}}
                 <a class="navbar-brand d-flex flex-column justify-content-center" href="{{ url('/') }}">
                     <span class="navbar-brand-title text-primary">Gestor de Eventos</span>
                     <span class="navbar-subtitle">Municipalidad</span>
@@ -63,7 +63,7 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav me-auto">
-                        {{-- Aquí podrías poner enlaces generales si quieres --}}
+                        {{-- Enlaces generales opcionales --}}
                     </ul>
 
                     <!-- Right Side Of Navbar -->
@@ -100,7 +100,24 @@
 
                                 <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
 
-                                    {{-- Opciones de ciudadano --}}
+                                    {{-- Opciones de ADMIN --}}
+                                    @if($esAdmin)
+                                        <a class="dropdown-item" href="{{ route('admin.index') }}">
+                                            👥 Usuarios
+                                        </a>
+
+                                        <div class="dropdown-divider"></div>
+                                    @endif
+
+                                    @if($esAdmin)
+                                        <a class="dropdown-item" href="{{ route('events.index') }}">
+                                            📅 Eventos
+                                        </a>
+
+                                        <div class="dropdown-divider"></div>
+                                    @endif
+
+                                    {{-- Opciones de CIUDADANO --}}
                                     @if(!$esAdmin)
                                         <a class="dropdown-item" href="{{ route('mis-eventos') }}">
                                             📅 Mis eventos

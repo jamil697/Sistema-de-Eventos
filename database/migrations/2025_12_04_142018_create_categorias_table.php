@@ -11,15 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('reportes', function (Blueprint $table) {
+        Schema::create('categorias', function (Blueprint $table) {
             $table->id();
-            $table->string('tipoReporte');              
-            $table->date('fechaGeneracion');            
-            $table->longText('contenido');             
-            $table->foreignId('administrador_id')
-                  ->constrained('users')
-                  ->onDelete('cascade');
-
+            $table->string('nombre'); // Social, Cultural, etc.
+            $table->string('slug')->unique(); // social, cultural...
             $table->timestamps();
         });
     }
@@ -29,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('reportes');
+        Schema::dropIfExists('categorias');
     }
 };

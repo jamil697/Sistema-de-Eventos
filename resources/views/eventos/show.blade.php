@@ -15,6 +15,8 @@
         <p><strong>Fecha fin:</strong> {{ \Carbon\Carbon::parse($event->fecha_fin)->format('d/m/Y H:i') }}</p>
     @endif
     <p><strong>Inscritos:</strong> {{ $inscritosCount }} @if($event->cupo) / Cupo: {{ $event->cupo }} @endif</p>
+    <p><strong>Categoría:</strong> {{ $event->categoria->nombre ?? 'Sin categoría' }}</p>
+
 
     <h5>Recursos asignados</h5>
     @if($event->resources->count())

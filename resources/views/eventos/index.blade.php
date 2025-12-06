@@ -22,6 +22,32 @@
     @if(session('error')) <div class="alert alert-danger">{{ session('error') }}</div> @endif
     @if(session('info')) <div class="alert alert-info">{{ session('info') }}</div> @endif
 
+    {{-- Filtro por categoría --}}
+    {{-- Filtro de categorías --}}
+<form method="GET" action="{{ url('/') }}" class="row g-2 mb-3">
+    <div class="col-md-4">
+        <label class="form-label mb-1">Filtrar por categoría</label>
+        <select name="categoria" class="form-control" onchange="this.form.submit()">
+            <option value="">Todas las categorías</option>
+            @foreach($categorias as $cat)
+                <option value="{{ $cat->id }}"
+                    {{ (isset($categoriaId) && $categoriaId == $cat->id) ? 'selected' : '' }}>
+                    {{ $cat->nombre }}
+                </option>
+            @endforeach
+        </select>
+    </div>
+
+    @if(!empty($categoriaId))
+        <div class="col-md-2 d-flex align-items-end">
+            <a href="{{ url('/') }}" class="btn btn-outline-secondary w-100">
+                Quitar filtro
+            </a>
+        </div>
+    @endif
+</form>
+
+
     @forelse($events as $event)
         <div class="card mb-2">
             <div class="card-body">
@@ -29,6 +55,13 @@
                 <p class="card-text">{{ Str::limit($event->descripcion, 150) }}</p>
                 <p class="card-text"><small>Fecha: {{ \Carbon\Carbon::parse($event->fecha_inicio)->format('d/m/Y H:i') }} — Lugar: {{ $event->lugar }}</small></p>
                 <p class="card-text"><small>Inscritos: {{ $event->registrations_count ?? 0 }} @if($event->cupo) / Cupo: {{ $event->cupo }} @endif</small></p>
+                <p class="card-text">
+                    <small>
+                        Categoría:
+                        {{ $event->categoria->nombre ?? 'Sin categoría' }}
+                    </small>
+                </p>
+
 
                 @auth
                     {{-- Mostrar acciones admin en cada tarjeta (opcional) --}}

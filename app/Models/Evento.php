@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 class Evento extends Model {
-    protected $fillable = ['titulo','descripcion','lugar','fecha_inicio','fecha_fin','cupo','created_by'];
+    protected $fillable = ['titulo','descripcion','lugar','fecha_inicio','categoria_id','fecha_fin','cupo','created_by'];
 
     public function registrations()
 {
@@ -25,19 +25,25 @@ public function users()
 }
 
     public function resources()
-{
-    // tabla pivot, foreignPivotKey en esta tabla (event_id), relatedPivotKey (resource_id)
-    return $this->belongsToMany(
-        Recurso::class,
-        'evento_recursos',
-        'event_id',     // columna en pivot que referencia a eventos
-        'recursos_id'   // columna en pivot que referencia a resources
-    )->withPivot('cantidad')->withTimestamps();
-}
+    {
+        // tabla pivot, foreignPivotKey en esta tabla (event_id), relatedPivotKey (resource_id)
+        return $this->belongsToMany(
+            Recurso::class,
+            'evento_recursos',
+            'event_id',     // columna en pivot que referencia a eventos
+            'recursos_id'   // columna en pivot que referencia a resources
+        )->withPivot('cantidad')->withTimestamps();
+    }
 
 
     public function creator(){
         return $this->belongsTo(User::class, 'created_by');
     }
+
+    public function categoria()
+    {
+        return $this->belongsTo(Categoria::class, 'categoria_id');
+    }
+
 }
 

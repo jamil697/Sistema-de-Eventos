@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('titulo');
             $table->text('descripcion')->nullable();
             $table->string('lugar')->nullable();
+            $table->foreignId('categoria_id')->nullable()->constrained('categorias')->nullOnDelete();
             $table->dateTime('fecha_inicio');
             $table->dateTime('fecha_fin')->nullable();
             $table->integer('cupo')->nullable(); // número máximo participantes

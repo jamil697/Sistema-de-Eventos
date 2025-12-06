@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Evento;
 use App\Models\Recurso;
+use App\Models\Categoria;
 use App\Models\User;
 use App\Notifications\EventUpdatedNotification;
 use Illuminate\Http\Request;
@@ -17,20 +18,37 @@ class EventController extends Controller
         $this->middleware('auth')->except(['index','show']);
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $events = Evento::withCount('registrations')
-            ->orderBy('fecha_inicio','asc')
-            ->paginate(10);
+        // Todas las categorías para el combo de filtro
+        $categorias = Categoria::orderBy('nombre')->get();
 
-        return view('eventos.index', compact('events'));
+        // Empezamos el query base
+        $query = Evento::with(['categoria'])
+            ->withCount('registrations')
+            ->orderBy('fecha_inicio', 'asc');
+
+        // Leer el filtro de la URL: ?categoria=ID
+        $categoriaId = $request->query('categoria');
+
+        if (!empty($categoriaId)) {
+            $query->where('categoria_id', $categoriaId);
+        }
+
+        // Paginación (manteniendo el filtro en los links)
+        $events = $query->paginate(10)->appends($request->only('categoria'));
+
+        return view('eventos.index', compact('events', 'categorias', 'categoriaId'));
     }
+
+
 
     public function create()
     {
         // Obtener recursos disponibles para asignar al crear evento
         $resources = Recurso::all();
-        return view('eventos.create', compact('resources'));
+        $categorias = Categoria::orderBy('nombre')->get();
+        return view('eventos.create', compact('resources','categorias'));
     }
 
     public function store(Request $request)
@@ -44,7 +62,9 @@ class EventController extends Controller
             'cupo' => 'nullable|integer|min:1',
             // resources.* expected as array 'resources[id]' = cantidad
             'resources' => 'nullable|array',
-            'resources.*' => 'nullable|integer|min:1'
+            'resources.*' => 'nullable|integer|min:1',
+            'categoria_id' => 'nullable|exists:categorias,id',
+
         ]);
 
         $data['created_by'] = Auth::id();
@@ -85,9 +105,10 @@ class EventController extends Controller
     }
 
         $resources = Recurso::all();
+        $categorias = Categoria::orderBy('nombre')->get();
         // preparar array con cantidades actuales
         $assigned = $event->resources->pluck('pivot.cantidad', 'id')->toArray();
-        return view('eventos.edit', compact('event','resources','assigned'));
+        return view('eventos.edit', compact('event','resources','assigned','categorias'));
     }
 
     public function update(Request $request, Evento $event)
@@ -103,7 +124,9 @@ class EventController extends Controller
             'fecha_fin' => 'nullable|date|after_or_equal:fecha_inicio',
             'cupo' => 'nullable|integer|min:1',
             'resources' => 'nullable|array',
-            'resources.*' => 'nullable|integer|min:0'
+            'resources.*' => 'nullable|integer|min:0',
+            'categoria_id' => 'nullable|exists:categorias,id',
+
         ]);
 
         $event->update($data);

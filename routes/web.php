@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminUserController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\EventController;
@@ -28,6 +29,8 @@ Route::middleware(['auth'])->group(function(){
     Route::get('/mis-eventos', [RegistracionController::class, 'misEventos'])->name('mis-eventos');
     Route::get('/notificaciones', [NotificacionController::class, 'index'])->name('notifications.index');
 
+    Route::get('/admin/usuarios', [AdminUserController::class, 'index'])
+        ->name('admin.index');
 
 });
 Route::get('/', [EventController::class,'index']);
