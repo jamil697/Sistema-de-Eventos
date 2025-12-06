@@ -7,68 +7,127 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>@yield("titulo", config('app.name', 'Laravel'))</title>
+    <title>{{ config('app.name', 'Gestor de Eventos') }}</title>
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
 
-    <!-- Bootstrap -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" 
-          rel="stylesheet" crossorigin="anonymous">
+    <!-- Scripts -->
+    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 
-    <!-- Estilos -->
-    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/branding.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/custome.css') }}">
+    <style>
+        .navbar-brand-title {
+            font-weight: 700;
+            letter-spacing: .03em;
+        }
+        .navbar-subtitle {
+            font-size: .75rem;
+            color: #6c757d;
+        }
+        .btn-gradient {
+            background: linear-gradient(135deg, #4f46e5, #06b6d4);
+            border-radius: 999px;
+            border: none;
+            color: #fff !important;
+            padding: .45rem 1.4rem;
+            font-weight: 600;
+        }
+        .btn-gradient:hover {
+            opacity: .9;
+            color: #fff !important;
+        }
+        .nav-notification-badge {
+            font-size: .7rem;
+            vertical-align: top;
+        }
+    </style>
 </head>
-
-<body class="bg-light">
+<body>
     <div id="app">
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">
-                <a class="navbar-brand" href="{{ url('/') }}">
-                    {{ config('app.name', 'Laravel') }}
+
+                {{-- Marca a la izquierda (puedes cambiar el texto o quitarlo del todo si quieres) --}}
+                <a class="navbar-brand d-flex flex-column justify-content-center" href="{{ url('/') }}">
+                    <span class="navbar-brand-title text-primary">Gestor de Eventos</span>
+                    <span class="navbar-subtitle">Municipalidad</span>
                 </a>
 
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" 
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                         data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                     <span class="navbar-toggler-icon"></span>
                 </button>
 
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav me-auto"></ul>
+                    <!-- Left Side Of Navbar -->
+                    <ul class="navbar-nav me-auto">
+                        {{-- Aquí podrías poner enlaces generales si quieres --}}
+                    </ul>
 
                     <!-- Right Side Of Navbar -->
-                    <ul class="navbar-nav ms-auto">
+                    <ul class="navbar-nav ms-auto align-items-center">
+                        <!-- Authentication Links -->
                         @guest
                             @if (Route::has('login'))
-                                <li class="nav-item">
+                                <li class="nav-item me-2">
                                     <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
                                 </li>
                             @endif
 
                             @if (Route::has('register'))
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
+                                    <a class="nav-link" href="{{ route('register') }}">{{ __('Registrarse') }}</a>
                                 </li>
                             @endif
-
                         @else
+                            {{-- Usuario autenticado --}}
                             <li class="nav-item dropdown">
-                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
-                                   data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                    {{ Auth::user()->name }}
+                                @php
+                                    $esAdmin = auth()->user()->email === env('ADMIN_EMAIL');
+                                    $unreadCount = !$esAdmin
+                                        ? auth()->user()->unreadNotifications()->count()
+                                        : 0;
+                                @endphp
+
+                                <a id="navbarDropdown"
+                                   class="nav-link dropdown-toggle d-flex align-items-center"
+                                   href="#" role="button" data-bs-toggle="dropdown"
+                                   aria-haspopup="true" aria-expanded="false" v-pre>
+                                    <span class="me-2 fw-semibold">{{ Auth::user()->name }}</span>
                                 </a>
 
                                 <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="{{ route('logout') }}"
+
+                                    {{-- Opciones de ciudadano --}}
+                                    @if(!$esAdmin)
+                                        <a class="dropdown-item" href="{{ route('mis-eventos') }}">
+                                            📅 Mis eventos
+                                        </a>
+
+                                        <a class="dropdown-item d-flex justify-content-between align-items-center"
+                                           href="{{ route('notifications.index') }}">
+                                            <span>🔔 Notificaciones</span>
+                                            @if($unreadCount > 0)
+                                                <span class="badge bg-danger nav-notification-badge">
+                                                    {{ $unreadCount }}
+                                                </span>
+                                            @endif
+                                        </a>
+
+                                        <div class="dropdown-divider"></div>
+                                    @endif
+
+                                    {{-- Botón logout degradé --}}
+                                    <a class="dropdown-item text-center btn-gradient mt-1"
+                                       href="{{ route('logout') }}"
                                        onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                        {{ __('Logout') }}
+                                        {{ __('Cerrar sesión') }}
                                     </a>
 
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                    <form id="logout-form" action="{{ route('logout') }}"
+                                          method="POST" class="d-none">
                                         @csrf
                                     </form>
                                 </div>
@@ -79,13 +138,11 @@
             </div>
         </nav>
 
-        <main class="py-4 container">
-            @yield("contenido")
-            @yield("content")
+        <main class="py-4">
+            @yield('content')
         </main>
     </div>
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    @stack('scripts')
 </body>
 </html>

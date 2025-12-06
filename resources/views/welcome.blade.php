@@ -5,7 +5,7 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                WLCOME MI PROYECTO DE LARAVEL
+                WLCOME MI LAB 6
             </div>
         </div>
     </div>
