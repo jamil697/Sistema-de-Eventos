@@ -13,9 +13,15 @@ class User extends Authenticatable
     use HasFactory, Notifiable;
 
     public function registrations(){ return $this->hasMany(Registracion::class); }
-    public function events(){ return $this->belongsToMany(Evento::class, 'registrations')->withTimestamps()->withPivot('estado'); }
-
-
+    public function events()
+    { 
+        return $this->belongsToMany(
+            Evento::class, 
+            'registracions', // 1. Nombre correcto de TU tabla (el que está en la migración)
+            'user_id',       // 2. Tu llave foránea
+            'event_id'       // 3. La llave foránea del evento (en tu migración pusiste event_id)
+        )->withTimestamps()->withPivot('estado'); 
+    }
     /**
      * The attributes that are mass assignable.
      *

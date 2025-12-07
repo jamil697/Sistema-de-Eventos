@@ -18,4 +18,12 @@ class AdminUserController extends Controller
 
         return view('admin.index', compact('users'));
     }
+
+    public function show(User $user)
+{
+    // Cargamos los eventos a los que el usuario está inscrito
+    $eventosInscritos = $user->events()->orderBy('fecha_inicio', 'desc')->get();
+
+    return view('admin.show', compact('user', 'eventosInscritos'));
+}
 }

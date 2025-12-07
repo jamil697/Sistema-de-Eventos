@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Evento extends Model {
-    protected $fillable = ['titulo','descripcion','lugar','fecha_inicio','categoria_id','fecha_fin','cupo','created_by'];
+
+    use HasFactory;
+    protected $fillable = ['titulo','descripcion','imagen','lugar','fecha_inicio','categoria_id','fecha_fin','cupo','created_by'];
 
     public function registrations()
 {

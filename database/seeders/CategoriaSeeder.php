@@ -22,9 +22,10 @@ class CategoriaSeeder extends Seeder
         ];
 
         foreach ($data as $cat) {
+            // firstOrCreate es perfecto: evita duplicados si ejecutas el seeder dos veces
             Categoria::firstOrCreate(['slug' => $cat['slug']], $cat);
         }
-
-        $this->call([CategoriaSeeder::class,]);
+        
+        // ¡HE BORRADO LA LÍNEA $this->call(...) QUE CAUSABA EL ERROR!
     }
 }

@@ -10,12 +10,19 @@
         </div>
     @endif
 
-    <form action="{{ route('events.store') }}" method="POST">
+    {{-- IMPORTANTE: enctype agregado para permitir subida de imagenes --}}
+    <form action="{{ route('events.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
 
         <div class="mb-3">
             <label class="form-label">Título</label>
             <input type="text" name="titulo" class="form-control" value="{{ old('titulo') }}" required>
+        </div>
+
+        {{-- CAMPO DE IMAGEN AGREGADO --}}
+        <div class="mb-3">
+            <label class="form-label">Imagen de portada (Opcional)</label>
+            <input type="file" name="imagen" class="form-control" accept="image/*">
         </div>
 
         <div class="mb-3">
@@ -57,61 +64,58 @@
         </div>
 
 
-        {{-- BLOQUE DE RECURSOS (selector + crear modal + assigned list) --}}
+        {{-- BLOQUE DE RECURSOS --}}
         <div class="card mb-3 p-3">
-          <h5>Asignar recursos</h5>
+            <h5>Asignar recursos</h5>
 
-          <div class="row g-2 align-items-end">
-            <div class="col-md-7">
-              <label for="selectResource" class="form-label">Seleccionar recurso</label>
-              <select id="selectResource" class="form-control">
-                <option value="">-- Selecciona un recurso --</option>
-                @foreach(\App\Models\Recurso::orderBy('nombre')->get() as $r)
-                  <option value="{{ $r->id }}">{{ $r->nombre }} (disp: {{ $r->cantidad }})</option>
-                @endforeach
-              </select>
+            <div class="row g-2 align-items-end">
+                <div class="col-md-7">
+                    <label for="selectResource" class="form-label">Seleccionar recurso</label>
+                    <select id="selectResource" class="form-control">
+                        <option value="">-- Selecciona un recurso --</option>
+                        @foreach(\App\Models\Recurso::orderBy('nombre')->get() as $r)
+                            <option value="{{ $r->id }}">{{ $r->nombre }} (disp: {{ $r->cantidad }})</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="col-md-2">
+                    <label class="form-label">Cantidad</label>
+                    <input id="selectCantidad" type="number" min="1" value="1" class="form-control">
+                </div>
+
+                <div class="col-md-3">
+                    <button id="btnAddSelectedResource" type="button" class="btn btn-primary w-100">Añadir seleccionado</button>
+                </div>
             </div>
 
-            <div class="col-md-2">
-              <label class="form-label">Cantidad</label>
-              <input id="selectCantidad" type="number" min="1" value="1" class="form-control">
-            </div>
+            <hr>
 
-            <div class="col-md-3">
-              <button id="btnAddSelectedResource" type="button" class="btn btn-primary w-100">Añadir seleccionado</button>
-            </div>
-          </div>
-
-          <hr>
-
-          <div id="assignedResourcesContainer">
-            {{-- aquí se inyectan dinámicamente los recursos seleccionados (inputs name="resources[id]") --}}
-            {{-- Si quieres precargar algo en create, puedes usar old() --}}
-            @if(old('resources'))
-              @foreach(old('resources') as $rid => $cant)
-                @php $res = \App\Models\Recurso::find($rid); @endphp
-                @if($res)
-                  <div class="assigned-resource row g-2 align-items-center mb-2" data-resource-id="{{ $res->id }}">
-                    <div class="col-md-8"><strong>{{ $res->nombre }}</strong></div>
-                    <div class="col-md-2"><input type="number" name="resources[{{ $res->id }}]" value="{{ $cant }}" min="0" class="form-control"></div>
-                    <div class="col-md-2"><button type="button" class="btn btn-danger btn-remove-resource">Quitar</button></div>
-                  </div>
+            <div id="assignedResourcesContainer">
+                @if(old('resources'))
+                    @foreach(old('resources') as $rid => $cant)
+                        @php $res = \App\Models\Recurso::find($rid); @endphp
+                        @if($res)
+                            <div class="assigned-resource row g-2 align-items-center mb-2" data-resource-id="{{ $res->id }}">
+                                <div class="col-md-8"><strong>{{ $res->nombre }}</strong></div>
+                                <div class="col-md-2"><input type="number" name="resources[{{ $res->id }}]" value="{{ $cant }}" min="0" class="form-control"></div>
+                                <div class="col-md-2"><button type="button" class="btn btn-danger btn-remove-resource">Quitar</button></div>
+                            </div>
+                        @endif
+                    @endforeach
                 @endif
-              @endforeach
-            @endif
-          </div>
+            </div>
 
-          <div class="mt-3">
-            <button id="btnOpenNewResource" type="button" class="btn btn-outline-secondary">Crear nuevo recurso</button>
-          </div>
+            <div class="mt-3">
+                <button id="btnOpenNewResource" type="button" class="btn btn-outline-secondary">Crear nuevo recurso</button>
+            </div>
         </div>
 
         <button class="btn btn-success">Guardar evento</button>
     </form>
 </div>
 
-    {{-- PEGA ESTO AL FINAL DE TU SECCIÓN @section('content'), ANTES DE @endsection --}}
-
+{{-- EL MODAL DEBE ESTAR AQUÍ --}}
 <div id="newResourceModal" style="display:none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 1050; align-items: center; justify-content: center;">
   <div class="card p-3" style="width:520px; margin:auto;">
     <h5>Crear recurso rápido</h5>
