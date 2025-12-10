@@ -7,10 +7,11 @@ use App\Models\Recurso;
 use App\Models\Categoria;
 use App\Models\User;
 use App\Notifications\EventUpdatedNotification;
-use Illuminate\Container\Attributes\Storage;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage as FacadesStorage;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Gd\Driver;
 
 class EventController extends Controller
 {
@@ -67,11 +68,28 @@ class EventController extends Controller
         ]);
 
         // 2. Lógica para guardar la imagen
-            if ($request->hasFile('imagen')) {
-                // Guarda en storage/app/public/eventos
-                $path = $request->file('imagen')->store('eventos', 'public'); 
-                $data['imagen'] = $path;
+        if ($request->hasFile('imagen')) {
+            
+        $file = $request->file('imagen');
+        $filename = time() . '.' . $file->getClientOriginalExtension();
+        $ruta = 'eventos/' . $filename;
+            // 2. INVOCAR LA LIBRERÍA (Aquí ocurre la magia)
+        $manager = new ImageManager(new Driver());
+        $image = $manager->read($file);
+
+            // 3. REDIMENSIONAR (Ancho 800px, altura automática)
+        $image->scale(width: 800);
+
+            // 4. GUARDAR EN STORAGE
+         Storage::disk('public')->put($ruta, (string) $image->toJpeg(80));
+
+        $data['imagen'] = $ruta;
+        } else {
+            // (Solo para UPDATE) Si no sube nueva, quitamos el campo para no borrar la existente
+            if (isset($event)) {
+                unset($data['imagen']);
             }
+        }
 
         $data['created_by'] = Auth::id();
         $events = Evento::create($data);
@@ -95,7 +113,6 @@ class EventController extends Controller
             $estaInscrito = Auth::check()
             ? $event->registrations()->where('user_id', Auth::id())->exists()
             : false;
-
 
             return view('eventos.show', compact('event','inscritosCount','estaInscrito'));
         }
@@ -137,18 +154,34 @@ class EventController extends Controller
             'categoria_id' => 'nullable|exists:categorias,id',
         ]);
 
+        // Lógica de la IMAGEN OPTIMIZADA
         if ($request->hasFile('imagen')) {
             
-            if ($event->imagen) {
+            // 1. Borrar imagen anterior si existe (Solo para el UPDATE)
+            if (isset($event) && $event->imagen) {
                 Storage::disk('public')->delete($event->imagen);
             }
-            
-            $data['imagen'] = $request->file('imagen')->store('eventos', 'public');
+
+            $file = $request->file('imagen');
+            $filename = time() . '.' . $file->getClientOriginalExtension();
+            $ruta = 'eventos/' . $filename;
+
+            // 2. INVOCAR LA LIBRERÍA (Aquí ocurre la magia)
+            $manager = new ImageManager(new Driver());
+            $image = $manager->read($file);
+
+            // 3. REDIMENSIONAR (Ancho 800px, altura automática)
+            $image->scale(width: 800);
+
+            // 4. GUARDAR EN STORAGE
+            Storage::disk('public')->put($ruta, (string) $image->toJpeg(80));
+
+            $data['imagen'] = $ruta;
         } else {
-            unset($data['imagen']);
-        }
-        if(isset($data['resources'])) {
-            unset($data['resources']);
+            // (Solo para UPDATE) Si no sube nueva, quitamos el campo para no borrar la existente
+            if (isset($event)) {
+                unset($data['imagen']);
+            }
         }
 
         // 6. Actualizamos el evento
