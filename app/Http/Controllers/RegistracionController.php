@@ -18,7 +18,6 @@ class RegistracionController extends Controller
     public function store(Request $request, Evento $event)
     {
         $user = Auth::user(); 
-        // 🚫 Bloquear que el admin se inscriba
         if ($user->email === env('ADMIN_EMAIL')) {
             return back()->with('info', 'Los administradores no pueden inscribirse en los eventos.');
         }

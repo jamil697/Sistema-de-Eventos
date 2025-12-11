@@ -15,6 +15,6 @@ class EventoSeeder extends Seeder
     {
         //
         // Crear 50 eventos falsos
-        Evento::factory(20)->create();
+        Evento::factory(30)->create();
     }
 }
